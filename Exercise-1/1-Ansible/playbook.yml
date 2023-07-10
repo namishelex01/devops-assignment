@@ -1,0 +1,50 @@
+---
+- hosts: all
+  become: true
+  
+  vars:
+    prerequisites:
+      - ca-certificates
+      - curl
+      - gnupg
+    docker_packages:
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io 
+      - docker-buildx-plugin 
+      - docker-compose-plugin
+
+  tasks:
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+
+    - name: Install prerequisites
+      apt:
+        pkg: "{{ vars.prerequisites }}"
+        state: latest
+        update_cache: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Install Docker and additional components
+      apt:
+        name: "{{ vars.docker_packages }}"
+        state: latest
+  
+    - name: Start Docker and enable at boot
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
