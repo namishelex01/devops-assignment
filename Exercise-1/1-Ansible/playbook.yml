@@ -42,7 +42,15 @@
       apt:
         name: "{{ vars.docker_packages }}"
         state: latest
-  
+        
+    - name: Copy syslog configuration file
+      copy:
+        src: utils/syslog.json
+        dest: /etc/docker/syslog.json
+        owner: root
+        group: root
+        mode: '0644'
+
     - name: Start Docker and enable at boot
       ansible.builtin.service:
         name: docker

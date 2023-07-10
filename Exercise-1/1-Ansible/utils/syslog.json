@@ -1,0 +1,7 @@
+{
+    "log-driver": "syslog",
+    "log-opts": {
+        "syslog-address": "tcp://127.0.0.1:514" 
+    }
+}
+  
