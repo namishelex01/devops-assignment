@@ -9,7 +9,7 @@ try:
     city = os.environ['OWM_CITY']
 except Exception as e:
     print(e)
-    sys.exit(0)
+    sys.exit(1)
 
 def run(api_key, city):
     try:
