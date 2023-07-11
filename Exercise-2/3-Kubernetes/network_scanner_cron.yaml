@@ -1,0 +1,19 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: network-scanner-cron
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: network-scanner
+              image: namishc/network-scanner:latest
+              imagePullPolicy: Always
+              command: ["python", "nw_scanner.py", "target"]
+              args: ["192.168.0.0/24"]  # Replace with your target IP address or CIDR range
+              restartPolicy: OnFailure
+        imagePullSecrets:
+          - name: registrycreds

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-scanner-deployment
+  labels:
+    app: network-scanner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-scanner
+  template:
+    metadata:
+      labels:
+        app: network-scanner
+    spec:
+      containers:
+        - name: network-scanner
+          image: namishc/network-scanner:latest
+          imagePullPolicy: Always
+          command: ["python", "nw_scanner.py", "target"]
+          args: ["192.168.0.0/24"] 
+          restartPolicy: Always
+      imagePullSecrets:
+        - name: registrycreds
