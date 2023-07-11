@@ -2,6 +2,7 @@ import socket
 import ipaddress
 import json
 import time
+import argparse
 
 def save_results(results):
     with open("last_scan_results.json", "w") as file:
@@ -46,5 +47,5 @@ args = parser.parse_args()
 last_scan_results = load_results()
 
 while True:
-    scan_network(target, last_scan_results)
+    scan_network(args.target, last_scan_results)
     time.sleep(3600)
