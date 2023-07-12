@@ -23,8 +23,8 @@ def scan_network(target, last_scan_results=None):
         ip_str = str(ip)
         print(ip_str)
         
-        for port in range(1, 65535):
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        for port, protocol in [(port, protocol) for port in range(1, 65535) for protocol in ["tcp", "udp"]]:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM if protocol == "tcp" else socket.SOCK_DGRAM)
             sock.settimeout(0.1)  
             
             result = sock.connect_ex((ip_str, port))
