@@ -1,18 +1,6 @@
 ---
 - hosts: all
   become: true
-  
-  vars:
-    prerequisites:
-      - ca-certificates
-      - curl
-      - gnupg
-    docker_packages:
-      - docker-ce 
-      - docker-ce-cli 
-      - containerd.io 
-      - docker-buildx-plugin 
-      - docker-compose-plugin
 
   tasks:
     - name: Update and upgrade apt packages
@@ -24,9 +12,15 @@
 
     - name: Install prerequisites
       apt:
-        pkg: "{{ vars.prerequisites }}"
+        pkg: "{{ item }}"
         state: latest
         update_cache: true
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - software-properties-common
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -40,8 +34,14 @@
 
     - name: Install Docker and additional components
       apt:
-        name: "{{ vars.docker_packages }}"
+        name: "{{ item }}"
         state: latest
+      loop:
+        - docker-ce 
+        - docker-ce-cli 
+        - containerd.io 
+        - docker-buildx-plugin 
+        - docker-compose-plugin
         
     - name: Copy syslog configuration file
       copy:
@@ -50,6 +50,12 @@
         owner: root
         group: root
         mode: '0644'
+
+    - name: Add user to the docker group
+      user:
+        name: ubuntu # Or any current user
+        groups: docker
+        append: yes
 
     - name: Start Docker and enable at boot
       ansible.builtin.service:
