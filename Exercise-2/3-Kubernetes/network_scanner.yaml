@@ -16,10 +16,9 @@ spec:
     spec:
       containers:
         - name: network-scanner
-          image: namishc/network-scanner:latest
+          image: namishc/network-scanner:v3
           imagePullPolicy: Always
-          command: ["python", "nw_scanner.py", "target"]
+          command: ["python3", "nw_scanner.py"]
           args: ["192.168.0.0/24"] 
-          restartPolicy: Always
       imagePullSecrets:
         - name: registrycreds
